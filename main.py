@@ -1,10 +1,18 @@
-from typing import Iterable
+from api import API
+
+app = API()
+
+@app.route(path="/home")
+def home(request, response):
+    response.text = "Page home"
+
+@app.route(path="/about")
+def about(request, response):
+    response.text = "Page about"
+
+@app.route(path="/hello/{name}")
+def greeting(request, response, name: str):
+    response.text = f"Hello, {name}"
 
 
-def app(environ: dict, start_response) -> Iterable:
-    """Параметры environ и start_response это объекты, которые передает нам Gunicorn.
-    Environ - содержит параметры запроса. start_response нужен для формирования ответа"""
-    response_body = b'{"Hello": "Word"}'
-    start_response(status="200", headers=[])
 
-    return iter([response_body])
