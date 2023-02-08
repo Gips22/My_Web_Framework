@@ -4,8 +4,9 @@ from urllib.parse import parse_qs
 
 
 class Request:
-    def __init__(self, environ):
+    def __init__(self, environ, settings: dict):
         self.get_params(environ['QUERY_STRING'])
+        self.settings = settings
 
     def get_params(self, raw_params: str):
         self.GET = parse_qs(raw_params)

@@ -1,5 +1,8 @@
+from src.request import Request
+
+
 class Response:
-    def __init__(self, status_code=200, headers=None, body=''):
+    def __init__(self, request: Request, status_code=200, headers=None, body=''):
         self.status_code = status_code
         self.headers = {}
         self.body = b''
@@ -7,12 +10,13 @@ class Response:
         if headers:
             self.update_headers(headers)
         self.set_body(body)
+        self.request = request
 
 
     def set_headers(self):
         self.headers = {
-            ('Content-Type', 'text/plain; charset=utf-8'),
-            ('Content-Length', 0),
+            'Content-Type': 'text/plain; charset=utf-8',
+            'Content-Length': 0,
         }
 
     def set_body(self, body):

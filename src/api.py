@@ -10,14 +10,14 @@ from src.response import Response
 
 
 class API:
-    def __init__(self, urls: List[Url]):
+    def __init__(self, urls: List[Url], settings: dict):
         self.urls = urls
+        self.settings = settings
 
     def __call__(self, environ: dict, start_response) -> Iterable:
         handler = self._get_handle(environ)
         request = self._get_request(environ)
         response = self._get_response(environ, handler, request)  # получаем атрибут из класса
-
         start_response(str(response.status_code), response.headers.items())
         return iter([response.body])
 
@@ -34,7 +34,7 @@ class API:
         return handler
 
     def _get_request(self, environ: dict):
-        return Request(environ)
+        return Request(environ, self.settings)  #  тут также пробрасываем settings из точки входа нашего приложения в request
 
     def _get_response(self, environ: dict, handler, request) -> Response:
         method = environ['REQUEST_METHOD'].lower()
