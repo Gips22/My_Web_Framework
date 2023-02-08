@@ -1,6 +1,4 @@
 """Здесь уже пользовательские views"""
-
-
 from src.view import View
 
 class Home(View):

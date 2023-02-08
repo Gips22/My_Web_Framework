@@ -3,7 +3,7 @@ from views import Home
 
 
 urlpatterns = [
-    Url('', Home),
+    Url('/', Home),
 ]
 
 
