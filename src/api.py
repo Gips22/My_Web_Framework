@@ -1,4 +1,4 @@
-from typing import Iterable, Callable, Union, List
+from typing import Iterable, Callable, Union, List, Type
 from src.urls import Url
 from exceptions import NotFound, NotAllowed
 from src.request import Request
@@ -6,18 +6,22 @@ from src.request import Request
 from webob import Request, Response
 from parse import parse
 from src.response import Response
-
+from src.middleware import BaseMiddleware
 
 
 class API:
-    def __init__(self, urls: List[Url], settings: dict):
+    def __init__(self, urls: List[Url], settings: dict, middlewares: List[Type[BaseMiddleware]]):
         self.urls = urls
         self.settings = settings
+        self.middlewares = middlewares
 
     def __call__(self, environ: dict, start_response) -> Iterable:
+        from pprint import pprint; pprint(environ)
         handler = self._get_handle(environ)
         request = self._get_request(environ)
+        # self._middleware_to_request(request)
         response = self._get_response(environ, handler, request)  # получаем атрибут из класса
+        # self._middleware_to_response(response)
         start_response(str(response.status_code), response.headers.items())
         return iter([response.body])
 
@@ -33,14 +37,23 @@ class API:
         handler = self.find_handler(request_path)()
         return handler
 
-    def _get_request(self, environ: dict):
-        return Request(environ, self.settings)  #  тут также пробрасываем settings из точки входа нашего приложения в request
+    def _get_request(self, environ: dict) -> Request:
+        return Request(environ, self.settings)  # тут также пробрасываем settings из точки входа нашего приложения в request
 
     def _get_response(self, environ: dict, handler, request) -> Response:
         method = environ['REQUEST_METHOD'].lower()
         if not hasattr(handler, method):
             raise NotAllowed
         return getattr(handler, method)(request)
+
+    def _middleware_to_request(self, request: Request):
+        for i in self.middlewares:
+            i().to_request(request)
+
+    def _middleware_to_response(self, response: Request):
+        for i in self.middlewares:
+            i().to_response(response)
+
 
 
 
@@ -78,4 +91,3 @@ class API:
 #     def default_response(self, response: Response):
 #         response.status_code = 404
 #         response.text = "Not found."
-

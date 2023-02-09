@@ -5,4 +5,4 @@ from src.request import Request
 
 class Home(View):
     def get(self, request: Request, *args, **kwargs):
-        return Response(request, body='Привет! Это ГЛАВНАЯ страница')
+        return Response(request, body=f'Привет! Это ГЛАВНАЯ страница')

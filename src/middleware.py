@@ -1,9 +1,18 @@
 """Нужны чтобы добавлять значения которые нужны будут во views,
-но их изначально нет в environ. К примеру, id пользователя в случае с авторизацией, аутентификацией"""
+но их изначально нет в environ. К примеру, id пользователя в случае с авторизацией.Самое популярное - аутентификация"""
 from src.request import Request
 from src.response import Response
 from uuid import uuid4
 from urllib.parse import parse_qs
+
+
+class BaseMiddleware:
+
+    def to_request(self, request: Request):
+        return
+
+    def to_response(self, response: Response):
+        return
 
 
 class Session:
@@ -16,10 +25,11 @@ class Session:
         request.extra['session_id'] = session_id
 
     def to_response(self, response: Response):
-        if not response.request.session_id:
+        if response.request.session_id:
             response.update_headers(
                 {"Set-Cookie": f"session_id={uuid4()}"}
             )
+
 
 middlewares = [
     Session

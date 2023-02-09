@@ -19,6 +19,7 @@ app = API(
     middlewares=middlewares,
 )
 
+
 # @app.route(path="/home")
 # def home(request: Request, response: Response):
 #     response.text = "Привет! Это ГЛАВНАЯ страница"

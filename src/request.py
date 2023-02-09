@@ -7,6 +7,11 @@ class Request:
     def __init__(self, environ, settings: dict):
         self.get_params(environ['QUERY_STRING'])
         self.settings = settings
+        self.environ = environ
+        self.extra = {}
+
+    def __getattr__(self, item):
+        return self.extra.get(item, None)
 
     def get_params(self, raw_params: str):
         self.GET = parse_qs(raw_params)

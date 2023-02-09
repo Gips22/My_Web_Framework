@@ -3,7 +3,8 @@ from views import Home
 
 
 urlpatterns = [
-    Url('/', Home),
+    Url(r'/', Home),
+    Url('/favicon.ico', Home)
 ]
 
 
