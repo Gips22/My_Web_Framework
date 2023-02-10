@@ -3,7 +3,7 @@ from src.urls import Url
 from exceptions import NotFound, NotAllowed
 from src.request import Request
 
-from webob import Request, Response
+# from webob import Request, Response
 from parse import parse
 from src.response import Response
 from src.middleware import BaseMiddleware
@@ -16,12 +16,12 @@ class API:
         self.middlewares = middlewares
 
     def __call__(self, environ: dict, start_response) -> Iterable:
-        from pprint import pprint; pprint(environ)
+        # from pprint import pprint; pprint(environ)
         handler = self._get_handle(environ)
         request = self._get_request(environ)
-        # self._middleware_to_request(request)
+        self._middleware_to_request(request)
         response = self._get_response(environ, handler, request)  # получаем атрибут из класса
-        # self._middleware_to_response(response)
+        self._middleware_to_response(response)
         start_response(str(response.status_code), response.headers.items())
         return iter([response.body])
 

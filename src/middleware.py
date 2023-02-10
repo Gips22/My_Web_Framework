@@ -18,14 +18,18 @@ class BaseMiddleware:
 class Session:
     def to_request(self, request: Request):
         """Чтобы не обновлять при каждом запросе uuid делаем проверку."""
+        print(f'Start func request, uuid = {uuid4}')
         cookie = request.environ.get('HTTP_COOKIE', None)
         if not cookie:
             return
         session_id = parse_qs(cookie)['session_id'][0]  # получаем id сессии
         request.extra['session_id'] = session_id
+        print(request.extra)
 
     def to_response(self, response: Response):
-        if response.request.session_id:
+        print(f'Start func response, uuid = {uuid4}')
+        print(response.request.session_id)
+        if not response.request.session_id:
             response.update_headers(
                 {"Set-Cookie": f"session_id={uuid4()}"}
             )
