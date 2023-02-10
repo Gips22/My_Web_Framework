@@ -1,5 +1,4 @@
-"""Нам придется передавать get параметры, id cессии и т.д.
-Если передавать во View - будет каша, создаем отдельный (подобный dataclass) объект для этого"""
+"""Cоздаем отдельный (подобный dataclass) объект Request. Чтобы не передавать get параметры, id cессии во View"""
 from urllib.parse import parse_qs
 
 
@@ -8,10 +7,11 @@ class Request:
         self.get_params(environ['QUERY_STRING'])
         self.settings = settings
         self.environ = environ
-        self.extra = {}
+        self.GET = None
+        self.dict_for_cookies = {}
 
     def __getattr__(self, item):
-        return self.extra.get(item, None)
+        return self.dict_for_cookies.get(item, None)
 
     def get_params(self, raw_params: str):
         self.GET = parse_qs(raw_params)

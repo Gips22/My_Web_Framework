@@ -1,3 +1,4 @@
+"""Cоздаем отдельный (подобный dataclass) объект Response."""
 from src.request import Request
 
 
@@ -11,11 +12,6 @@ class Response:
             self.update_headers(headers)
         self.set_body(body)
         self.request = request
-        self.extra = {}
-
-    def __getattr__(self, item):
-        return self.extra.get(item)
-
 
     def set_headers(self):
         self.headers = {
