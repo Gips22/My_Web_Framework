@@ -2,7 +2,7 @@ FROM python
 
 WORKDIR /app
 
-COPY my_web_framework /app
+COPY . /app
 
 RUN pip install poetry
 RUN poetry install
